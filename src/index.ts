@@ -32,7 +32,7 @@
  * - `/reject`           — cancel the pending run (not yet supported; cancel manually)
  */
 
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin, runWorker } from "@paperclipai/plugin-sdk";
 
 /**
  * State key used to track the pending run for an issue.
@@ -41,7 +41,7 @@ import { definePlugin } from "@paperclipai/plugin-sdk";
  */
 const PENDING_APPROVAL_KEY = "pendingApprovalRun";
 
-export default definePlugin({
+const plugin = definePlugin({
   async setup(ctx) {
     // -------------------------------------------------------------------------
     // 1. Intercept new gated runs
@@ -146,3 +146,7 @@ export default definePlugin({
     });
   },
 });
+
+runWorker(plugin, import.meta.url);
+
+export default plugin;

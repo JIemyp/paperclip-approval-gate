@@ -25,3 +25,5 @@ export const manifest: PaperclipPluginManifestV1 = {
     "plugin.state.write",
   ],
 };
+
+export default manifest;

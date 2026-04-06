@@ -22,4 +22,5 @@ export const manifest = {
         "plugin.state.write",
     ],
 };
+export default manifest;
 //# sourceMappingURL=manifest.js.map

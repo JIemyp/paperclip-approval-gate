@@ -31,14 +31,14 @@
  * - `/approve <note>`   — approve with an optional note
  * - `/reject`           — cancel the pending run (not yet supported; cancel manually)
  */
-import { definePlugin } from "@paperclipai/plugin-sdk";
+import { definePlugin, runWorker } from "@paperclipai/plugin-sdk";
 /**
  * State key used to track the pending run for an issue.
  * Stored as:  ctx.state  scopeKind="issue"  stateKey="pendingApprovalRun"
  * Value: { runId: string; agentId: string; postedAt: string }
  */
 const PENDING_APPROVAL_KEY = "pendingApprovalRun";
-export default definePlugin({
+const plugin = definePlugin({
     async setup(ctx) {
         // -------------------------------------------------------------------------
         // 1. Intercept new gated runs
@@ -123,4 +123,6 @@ export default definePlugin({
         });
     },
 });
+runWorker(plugin, import.meta.url);
+export default plugin;
 //# sourceMappingURL=index.js.map
