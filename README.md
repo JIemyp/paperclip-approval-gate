@@ -376,7 +376,22 @@ Key changes:
 
 #### `ui/src/components/LiveRunWidget.tsx` — Approve button in issue view
 
-When a run is waiting for approval (`status === "queued" && approvalGate === true`), show a green **Approve** button directly in the issue's Live Runs widget:
+When a run is waiting for approval (`status === "queued" && approvalGate === true`), show a green **Approve** button directly in the issue's Live Runs widget.
+
+**Important:** The widget deduplicates runs from two sources — `liveRuns` (from `/issues/:id/live-runs`) and `activeRun` (from `/issues/:id/active-run`). When `activeRun` overwrites a `liveRuns` entry, `approvalGate` must be explicitly copied, otherwise it becomes `undefined` and the Approve button never appears:
+
+```tsx
+if (activeRun) {
+  deduped.set(activeRun.id, {
+    ...
+    adapterType: activeRun.adapterType,
+    approvalGate: activeRun.approvalGate,  // ← must include this
+    issueId,
+  });
+}
+```
+
+The Approve button itself:
 
 ```tsx
 {run.status === "queued" && run.approvalGate && (
@@ -389,6 +404,13 @@ When a run is waiting for approval (`status === "queued" && approvalGate === tru
     {approvingRunIds.has(run.id) ? "Approving…" : "Approve"}
   </button>
 )}
+```
+
+A patch file for this fix is included: **`liverunwidget-approvalgate.patch`**
+
+```bash
+cd /your/paperclip
+git apply liverunwidget-approvalgate.patch
 ```
 
 ---
